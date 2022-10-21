@@ -2,6 +2,7 @@ package pe.edu.ulima.pm.misevaluaciones
 
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
@@ -14,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.*
+import pe.edu.ulima.pm.misevaluaciones.model.remote.HTTPManager
 import pe.edu.ulima.pm.misevaluaciones.presentation.screens.main.MainScreen
 import pe.edu.ulima.pm.misevaluaciones.ui.theme.MisEvaluacionesTheme
 
@@ -21,29 +23,21 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        GlobalScope.launch {
+            // Voy a realizar la conexion
+            val httpManager = HTTPManager.instance
+            val listaCarreras = withContext(Dispatchers.IO) {
+                httpManager.getCarreras()
+            }
+            if (listaCarreras != null) {
+                Log.i("MainActivity", listaCarreras.size.toString())
+            }else {
+                Log.e("MainActivity", "Error en el servicio");
+            }
+        }
+
         setContent {
-            val countState = remember {
-                mutableStateOf(0)
-            }
-
-            val timer = {
-                var cont = 0
-                while (cont < 30) {
-                    Log.i("MainActivity", cont.toString())
-                    countState.value = cont
-                    cont += 1
-                    Thread.sleep(1000L)
-                }
-            }
-
-            MainScreen(countState.value) {
-                GlobalScope.launch(Dispatchers.Main) {
-                    withContext(Dispatchers.IO) {
-                        timer()
-                    }
-                    finish()
-                }
-            }
+            MainScreen()
         }
     }
 }
