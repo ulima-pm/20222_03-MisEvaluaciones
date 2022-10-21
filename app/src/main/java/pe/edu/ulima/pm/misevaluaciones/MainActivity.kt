@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        GlobalScope.launch {
+        /*GlobalScope.launch {
             // Voy a realizar la conexion
             val httpManager = HTTPManager.instance
             val listaCarreras = withContext(Dispatchers.IO) {
@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
             }else {
                 Log.e("MainActivity", "Error en el servicio");
             }
-        }
+        }*/
 
         setContent {
             MainScreen()
