@@ -15,6 +15,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import kotlinx.coroutines.*
+import pe.edu.ulima.pm.misevaluaciones.model.firebase.FirebaseManager
 import pe.edu.ulima.pm.misevaluaciones.model.remote.HTTPManager
 import pe.edu.ulima.pm.misevaluaciones.presentation.screens.main.MainScreen
 import pe.edu.ulima.pm.misevaluaciones.ui.theme.MisEvaluacionesTheme
@@ -22,6 +23,8 @@ import pe.edu.ulima.pm.misevaluaciones.ui.theme.MisEvaluacionesTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        FirebaseManager.instance.getCarreras()
 
         /*GlobalScope.launch {
             // Voy a realizar la conexion
