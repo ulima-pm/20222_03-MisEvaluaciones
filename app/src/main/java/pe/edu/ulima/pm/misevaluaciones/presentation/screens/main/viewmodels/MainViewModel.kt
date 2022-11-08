@@ -38,34 +38,41 @@ class MainViewModel(
         if (esPrimeraVez){
             // Llamada Remota
             viewModelScope.launch {
-                val lista = withContext(Dispatchers.IO) {
-                    HTTPManager.instance.getCarreras()
+                withContext(Dispatchers.IO) {
+                    val lista = HTTPManager.instance.getCarreras()
+
+                    if (lista != null) {
+                        lista.forEach {
+                            dbManager.insertCarrera(
+                                CarreraRoom(
+                                    id = it.id,
+                                    nombre = it.nombre
+                                )
+                            )
+                            listaCarreras.add(it)
+                        }
+                        sp.edit().putBoolean("FLAG_ES_PRIMERA_VEZ", false).commit()
+                    }else {
+                        Log.e("MainScren", "Error de comunicacion con el servicio")
+                    }
                 }
 
-                if (lista != null) {
-                    lista.forEach {
-                        dbManager.insertCarrera(
-                            CarreraRoom(
-                                id = it.id,
-                                nombre = it.nombre
-                            )
-                        )
-                        listaCarreras.add(it)
-                    }
-                    sp.edit().putBoolean("FLAG_ES_PRIMERA_VEZ", false).commit()
-                }else {
-                    Log.e("MainScren", "Error de comunicacion con el servicio")
-                }
+
             }
         }else {
-            // Carga de Room
-            dbManager.getCarreras().forEach {
-                listaCarreras.add(
-                    Carrera(
-                        id = it.id,
-                        nombre = it.nombre
+            viewModelScope.launch {
+                val carreras = withContext(Dispatchers.IO) {
+                    // Carga de Room
+                    dbManager.getCarreras()
+                }
+                carreras.forEach {
+                    listaCarreras.add(
+                        Carrera(
+                            id = it.id,
+                            nombre = it.nombre
+                        )
                     )
-                )
+                }
             }
         }
 
