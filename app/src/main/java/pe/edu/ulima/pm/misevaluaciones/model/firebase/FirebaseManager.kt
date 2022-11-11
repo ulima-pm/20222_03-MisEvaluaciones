@@ -72,6 +72,28 @@ class FirebaseManager private constructor(){
                 onError(it.message.toString())
             }
     }
+
+    fun registrarUsuario(
+        name : String,
+        username : String,
+        password : String,
+        onError : (String) -> Unit,
+        onSuccess : (String) -> Unit
+    ) {
+        val newDoc = db.collection("usuarios").document()
+
+        val data = HashMap<String, Any>()
+        data["name"] = name
+        data["username"] = username
+        data["password"] = password
+
+        newDoc.set(data)
+            .addOnSuccessListener {
+                onSuccess(name)
+            }.addOnFailureListener { exception ->
+                onError(exception.message!!.toString())
+            }
+    }
 }
 
 

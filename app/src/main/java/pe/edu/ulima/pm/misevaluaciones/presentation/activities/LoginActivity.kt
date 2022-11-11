@@ -5,6 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import pe.edu.ulima.pm.misevaluaciones.MainActivity
+import pe.edu.ulima.pm.misevaluaciones.presentation.screens.login.LoginNavigation
 import pe.edu.ulima.pm.misevaluaciones.presentation.screens.login.LoginScreen
 
 class LoginActivity : ComponentActivity() {
@@ -18,7 +19,9 @@ class LoginActivity : ComponentActivity() {
             pasarAlMain()
         }else {
             setContent {
-                LoginScreen(onLoginSuccess = guardarCredencialesLogin)
+                LoginNavigation(
+                    onLoginSuccess = guardarCredencialesLogin
+                )
             }
         }
     }
