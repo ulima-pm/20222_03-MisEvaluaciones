@@ -24,8 +24,6 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        FirebaseManager.instance.getCarreras()
-
         /*GlobalScope.launch {
             // Voy a realizar la conexion
             val httpManager = HTTPManager.instance

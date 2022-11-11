@@ -4,6 +4,7 @@ import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import pe.edu.ulima.pm.misevaluaciones.model.entity.Carrera
 
 // Singleton
 class FirebaseManager private constructor(){
@@ -24,18 +25,51 @@ class FirebaseManager private constructor(){
             }
     }
 
-    fun getCarreras() {
+    fun getCarreras(
+        callbackSuccess : (List<Carrera>) -> Unit,
+        callbackError : (String) -> Unit,
+    ) {
         db.collection("carreras")
             .get()
             .addOnSuccessListener { documents ->
+                val lista = mutableListOf<Carrera>()
                 documents.forEach { doc ->
-                    Log.i(
-                        "Firebase", "ID:${doc.id} NOMBRE:${doc.data["nombre"]}"
+                    lista.add(
+                        Carrera(
+                            id = doc.id,
+                            nombre = doc.data["nombre"]!! as String
+                        )
                     )
                 }
+                callbackSuccess(lista)
 
             }.addOnFailureListener { exception ->
                 Log.e("Firebase Error", exception.message!!)
+                callbackError(exception.message!!)
+            }
+    }
+
+    fun login(
+        cod : String,
+        password : String,
+        onError : (String) -> Unit,
+        onSuccess : (String) -> Unit
+    ){
+        db.collection("usuarios")
+            .whereEqualTo("username", cod)
+            .whereEqualTo("password", password)
+            .get()
+            .addOnSuccessListener {  snapshot ->
+                if (snapshot.size() > 0) {
+                    val name = snapshot.documents[0].data!!
+                        .get("nombre")!!.toString()
+                    onSuccess(name)
+                }else {
+                    // Error en login
+                    onError("Login incorrecto")
+                }
+            }.addOnFailureListener {
+                onError(it.message.toString())
             }
     }
 }

@@ -2,6 +2,7 @@ package pe.edu.ulima.pm.misevaluaciones.presentation.screens.main
 
 import android.util.Log
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Button
@@ -29,7 +30,8 @@ fun MainScreen(
     )
 ) {
     LaunchedEffect(key1 = true) {
-        vm.getCarreras()
+        //vm.getCarreras()
+        vm.getCarrerasFirebase()
     }
 
     ListaCarreras(carreras = vm.listaCarreras)

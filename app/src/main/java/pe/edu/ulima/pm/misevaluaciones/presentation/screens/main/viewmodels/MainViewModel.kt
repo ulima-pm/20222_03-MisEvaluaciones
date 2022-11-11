@@ -13,6 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import pe.edu.ulima.pm.misevaluaciones.model.entity.Carrera
+import pe.edu.ulima.pm.misevaluaciones.model.firebase.FirebaseManager
 import pe.edu.ulima.pm.misevaluaciones.model.local.DBManager
 import pe.edu.ulima.pm.misevaluaciones.model.local.entity.CarreraRoom
 import pe.edu.ulima.pm.misevaluaciones.model.remote.HTTPManager
@@ -45,7 +46,7 @@ class MainViewModel(
                         lista.forEach {
                             dbManager.insertCarrera(
                                 CarreraRoom(
-                                    id = it.id,
+                                    id = it.id.toInt(),
                                     nombre = it.nombre
                                 )
                             )
@@ -68,14 +69,33 @@ class MainViewModel(
                 carreras.forEach {
                     listaCarreras.add(
                         Carrera(
-                            id = it.id,
+                            id = it.id.toString(),
                             nombre = it.nombre
                         )
                     )
                 }
             }
         }
+    }
 
+    fun getCarrerasFirebase() {
+        // Preguntar: Es la primera vez? -> SharedPreference (flag)
+        // Si: Consulta a Firebase
+        val sp = context.applicationContext.getSharedPreferences(
+            "SP_INFO", Context.MODE_PRIVATE
+        )
+        val esPrimeraVez =
+            sp.getBoolean("FLAG_ES_PRIMERA_VEZ", true)
 
+        FirebaseManager.instance.getCarreras(
+            callbackSuccess = { carreras ->
+                carreras.forEach {
+                    listaCarreras.add(it)
+                }
+            },
+            callbackError = { error ->
+
+            }
+        )
     }
 }

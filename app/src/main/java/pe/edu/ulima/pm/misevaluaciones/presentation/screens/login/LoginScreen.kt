@@ -35,8 +35,11 @@ fun LoginScreen(
             },
             visualTransformation = PasswordVisualTransformation()
         )
+        Text(
+            text = vm.error.value
+        )
         Button(
-            onClick = { vm.login() }
+            onClick = { vm.loginFirebase() }
         ) {
             Text(text = "Login")
         }
