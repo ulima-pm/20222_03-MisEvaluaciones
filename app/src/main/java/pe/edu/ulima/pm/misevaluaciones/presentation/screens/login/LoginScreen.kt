@@ -9,14 +9,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.lifecycle.viewmodel.compose.viewModel
+import pe.edu.ulima.pm.misevaluaciones.model.domain.repository.UsuariosRepository
+import pe.edu.ulima.pm.misevaluaciones.model.domain.repository.UsuariosRepositoryImpl
 import pe.edu.ulima.pm.misevaluaciones.presentation.screens.login.viewmodels.LoginViewModel
 import pe.edu.ulima.pm.misevaluaciones.presentation.screens.login.viewmodels.LoginViewModelFactory
 
 @Composable
 fun LoginScreen(
     onLoginSuccess : (username : String) -> Unit,
+    usuariosRepository: UsuariosRepository,
     vm : LoginViewModel = viewModel(
-        factory = LoginViewModelFactory(onLoginSuccess)
+        factory = LoginViewModelFactory(
+            onLoginSuccess,
+            usuariosRepository
+        )
     )
 ) {
     Column(

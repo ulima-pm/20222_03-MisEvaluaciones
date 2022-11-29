@@ -7,11 +7,13 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import pe.edu.ulima.pm.misevaluaciones.model.domain.repository.UsuariosRepository
 import pe.edu.ulima.pm.misevaluaciones.model.firebase.FirebaseManager
 import pe.edu.ulima.pm.misevaluaciones.model.remote.HTTPManager
 
 class LoginViewModel(
-    private val onLoginSuccess : (String) -> Unit
+    private val onLoginSuccess : (String) -> Unit,
+    private val usuariosRepository: UsuariosRepository
 ) : ViewModel() {
     var username = mutableStateOf("")
     var password = mutableStateOf("")
@@ -19,6 +21,17 @@ class LoginViewModel(
 
     fun login() {
         viewModelScope.launch {
+            val resp = withContext(Dispatchers.IO) {
+                usuariosRepository.login(username.value, password.value)
+            }
+            if (resp) onLoginSuccess(username.value)
+            else {
+                // Login incorrecto
+            }
+        }
+
+
+        /*viewModelScope.launch {
             val loginResponse = withContext(Dispatchers.IO) {
                 HTTPManager.instance.login(
                     cod = username.value,
@@ -34,7 +47,7 @@ class LoginViewModel(
                     // Login incorrecto
                 }
             }
-        }
+        }*/
     }
 
     fun loginFirebase() {

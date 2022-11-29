@@ -5,11 +5,13 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import pe.edu.ulima.pm.misevaluaciones.model.domain.repository.UsuariosRepository
 
 @Composable
 fun LoginNavigation(
     navController : NavHostController = rememberNavController(),
-    onLoginSuccess : (String) -> Unit
+    onLoginSuccess : (String) -> Unit,
+    usuariosRepository: UsuariosRepository
 ) {
     NavHost(
         navController = navController,
@@ -17,7 +19,8 @@ fun LoginNavigation(
     ) {
         composable("login") {
             LoginScreen(
-                onLoginSuccess = onLoginSuccess
+                onLoginSuccess = onLoginSuccess,
+                usuariosRepository = usuariosRepository
             )
         }
         composable("registro") {
